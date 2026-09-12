@@ -1,14 +1,14 @@
+import { AdminSidebar } from "@/components/admin/sidebar";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { AdminSidebar } from "@/components/admin/sidebar";
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // middleware already handles unauthenticated redirects for non-login pages
-  // this is a server-side fallback
+  // Server-side session check (middleware already handles unauthenticated requests,
+  // this is a fallback for direct server renders)
   const session = await auth();
   if (!session?.user) {
     redirect("/admin/login");
