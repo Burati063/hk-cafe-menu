@@ -21,7 +21,7 @@ export async function GET() {
       ]);
 
     const popularItems = allItems
-      .filter((item) => parseTags(item.tags as string).includes("Popular"))
+      .filter((item) => parseTags(item.tags).includes("Popular"))
       .slice(0, 5);
 
     return NextResponse.json({ totalCategories, totalItems, availableItems, unavailableItems, popularItems });

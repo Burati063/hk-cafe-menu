@@ -25,9 +25,9 @@ async function getDashboardData() {
       }),
     ]);
 
-  // Filter popular items client-side since SQLite stores tags as JSON string
+  // parseTags handles both string[] (PostgreSQL) and JSON string (SQLite)
   const popularItems = rawPopular
-    .filter((item) => parseTags(item.tags as string).includes("Popular"))
+    .filter((item) => parseTags(item.tags).includes("Popular"))
     .slice(0, 5);
 
   return { totalCategories, totalItems, availableItems, unavailableItems, popularItems, recentItems: rawRecent };
