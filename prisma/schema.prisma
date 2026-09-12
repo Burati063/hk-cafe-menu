@@ -1,0 +1,67 @@
+// Prisma schema for HK Cafe
+// Local dev  → SQLite  (DATABASE_URL="file:./dev.db")
+// Production → PostgreSQL (DATABASE_URL="postgresql://...")
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
+}
+
+model Category {
+  id            String     @id @default(cuid())
+  name          String
+  nameAm        String?
+  slug          String     @unique
+  description   String?
+  descriptionAm String?
+  sortOrder     Int        @default(0)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  items         MenuItem[]
+
+  @@map("categories")
+}
+
+model MenuItem {
+  id            String   @id @default(cuid())
+  name          String
+  nameAm        String?
+  description   String?
+  descriptionAm String?
+  price         Float
+  imageUrl      String?
+  isAvailable   Boolean  @default(true)
+  tags          String[] @default([])
+  sortOrder     Int      @default(0)
+  categoryId    String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("menu_items")
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+
+  @@map("admin_users")
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
